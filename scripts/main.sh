@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # Retrieve the workspace processes from tmux setting (default to 'tmux')
 processes=$(tmux show-option -gqv '@workspace_usage_processes')
@@ -30,7 +30,7 @@ if [ "$show_cpu" = "on" ]; then
     cpu_usage=$(echo "$process_list" | awk '{sum += $3} END {printf "%.2f%%", sum}')
 fi
 
-output=""
+output="N/A"
 
 if [ "$show_mem" = "on" ]; then
     output="$memory_usage"
@@ -43,5 +43,10 @@ if [ "$show_cpu" = "on" ]; then
         output="$cpu_usage"
     fi
 fi
+
+echo "$(date '+%Y-%m-%d %H:%M:%S') - Script executed" >> /tmp/tmux-workspace-usage-log.txt
+echo "Processes: $process_list" >> /tmp/tmux-workspace-usage-log.txt
+echo "Memory usage: $memory_usage" >> /tmp/tmux-workspace-usage-log.txt
+echo "CPU usage: $cpu_usage" >> /tmp/tmux-workspace-usage-log.txt
 
 echo "$output"
