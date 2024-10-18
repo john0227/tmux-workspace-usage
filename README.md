@@ -35,6 +35,7 @@ set -g @workspace_usage_processes 'tmux|nvim|mason'
 # Enable memory and CPU usage display (default is 'on')
 set -g @workspace_usage_mem 'on'
 set -g @workspace_usage_cpu 'on'
+set -g @workspace_usage_refresh_interval 1  # refresh every 1 second
 
 # Add the plugin output to status-right
 set -g status-right '#{workspace_usage}'

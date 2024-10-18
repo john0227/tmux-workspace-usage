@@ -16,6 +16,30 @@ if [ -z "$show_cpu" ]; then
     show_cpu="on"
 fi
 
+refresh_interval=$(tmux show-option -gqv '@workspace_usage_refresh_interval')
+if [ -z "$refresh_interval" ]; then
+    refresh_interval=1
+fi
+
+# Temporary file to store last update time
+last_update_file="/tmp/tmux-workspace-usage-last-update"
+
+# Get the current time and the last update time
+current_time=$(date +%s)
+if [ -f "$last_update_file" ]; then
+    last_update=$(cat "$last_update_file")
+else
+    last_update=0
+fi
+
+# Check if the refresh interval has passed
+if [ $((current_time - last_update)) -lt $refresh_interval ]; then
+    # If the interval hasn't passed, use cached output and exit
+    cached_output=$(cat /tmp/tmux-workspace-usage-output)
+    echo "$cached_output"
+    exit 0
+fi
+
 # Get the list of processes and filter for relevant ones
 process_list=$(ps aux | grep -E "$processes" | grep -v grep)
 
@@ -43,6 +67,10 @@ if [ "$show_cpu" = "on" ]; then
         output="$cpu_usage"
     fi
 fi
+
+# Save current time as the last update time
+echo "$current_time" > "$last_update_file"
+echo "$output" > /tmp/tmux-workspace-usage-output
 
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Script executed" >> /tmp/tmux-workspace-usage-log.txt
 echo "Processes: $process_list" >> /tmp/tmux-workspace-usage-log.txt
