@@ -1,4 +1,4 @@
-# tmux-workspace-usage
+# Workspace usage plugin for tmux
 
 A tmux plugin that displays the memory and CPU usage of your workspace processes in the tmux status bar.
 
@@ -27,7 +27,7 @@ set -g @plugin 'sjdonado/tmux-workspace-usage'
 - `@workspace_usage_mem`: Toggles memory usage display (on or off).
 - `@workspace_usage_cpu`: Toggles CPU usage display (on or off).
 
-The default configuration:
+Example:
 ```bash
 # Set the processes to monitor (customize this as needed)
 set -g @workspace_usage_processes 'tmux|nvim|mason'
@@ -35,7 +35,7 @@ set -g @workspace_usage_processes 'tmux|nvim|mason'
 # Enable memory and CPU usage display (default is 'on')
 set -g @workspace_usage_mem 'on'
 set -g @workspace_usage_cpu 'on'
-set -g @workspace_usage_refresh_interval 1  # refresh every 1 second
+set -g @workspace_usage_refresh_interval 10  # refresh every 10 seconds
 
 # Add the plugin output to status-right
 set -g status-right '#{workspace_usage}'
