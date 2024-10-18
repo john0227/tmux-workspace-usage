@@ -4,23 +4,23 @@ CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$CURRENT_DIR/helpers.sh"
 
 main () {
-  processes=$(get_tmux_option '@workspace_usage_processes' 'tmux')
-  show_mem=$(get_tmux_option '@workspace_usage_mem' 'on')
-  show_cpu=$(get_tmux_option '@workspace_usage_cpu' 'on')
-  refresh_interval=$(get_tmux_option '@workspace_usage_refresh_interval' 1)
+  local processes=$(get_tmux_option '@workspace_usage_processes' 'tmux')
+  local show_mem=$(get_tmux_option '@workspace_usage_mem' 'on')
+  local show_cpu=$(get_tmux_option '@workspace_usage_cpu' 'on')
+  local refresh_interval=$(get_tmux_option '@workspace_usage_refresh_interval' 1)
 
-  output="N/A"
+  local output="N/A"
 
   # Temporary file to store last update time
-  last_update_file="/tmp/tmux-workspace-usage-last-update"
+  local last_update_file="/tmp/tmux-workspace-usage-last-update"
 
   # Get the current time in seconds since the epoch
-  current_time=$(date +%s)
+  local current_time=$(date +%s)
 
   if [ ! -f "$last_update_file" ]; then
-      last_update=0
+      local last_update=0
   else
-      last_update=$(cat "$last_update_file")
+      local last_update=$(cat "$last_update_file")
       # If last_update is empty or not numeric, set it to 0
       if [[ -z "$last_update" || ! "$last_update" =~ ^[0-9]+$ ]]; then
           last_update=0
@@ -31,7 +31,7 @@ main () {
   if ((current_time - last_update < refresh_interval)); then
       # Check if the cached output file exists before reading it
       if [ -f /tmp/tmux-workspace-usage-output ]; then
-          cached_output=$(cat /tmp/tmux-workspace-usage-output)
+          local cached_output=$(cat /tmp/tmux-workspace-usage-output)
           echo "$cached_output"
       else
           echo "$output"
@@ -40,10 +40,10 @@ main () {
   fi
 
   # Get the list of processes and filter for relevant ones
-  process_list=$(ps aux | grep -E "$processes" | grep -v grep)
+  local process_list=$(ps aux | grep -E "$processes" | grep -v grep)
 
-  memory_usage=""
-  cpu_usage=""
+  local memory_usage=""
+  local cpu_usage=""
 
   if [ "$show_mem" = "on" ]; then
     memory_usage=$(echo "$process_list" | awk '{print $2, $6}' | sort -u -k1,1 | awk '{sum += $2} END {printf "%.2f MB", sum / 1024}')
