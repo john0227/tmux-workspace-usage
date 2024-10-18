@@ -7,15 +7,11 @@ main () {
   local processes=$(get_tmux_option '@workspace_usage_processes' 'tmux')
   local show_mem=$(get_tmux_option '@workspace_usage_mem' 'on')
   local show_cpu=$(get_tmux_option '@workspace_usage_cpu' 'on')
-
-  # Get the status-interval from tmux settings and use it as the default for refresh_interval
   local status_interval=$(get_tmux_option '@status-interval' 15)
-  local refresh_interval=$(get_tmux_option '@workspace_usage_refresh_interval' "$status_interval")
+  local interval_delay=$(get_tmux_option '@workspace_usage_interval_delay' 0)
   
-  # Sleep for (refresh_interval - status_interval)
-  local sleep_time=$((refresh_interval - status_interval))
-  if (( sleep_time > 0 )); then
-    sleep "$sleep_time"
+  if (( interval_delay > 0 && interval_delay <= status_interval )); then
+    sleep "$interval_delay"
   fi
 
   local output="N/A"

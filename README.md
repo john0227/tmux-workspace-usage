@@ -23,19 +23,22 @@ set -g @plugin 'sjdonado/tmux-workspace-usage'
 
 ## Configuration
 
-- `@workspace_usage_processes`: A string of process names separated by | that you want to monitor.
-- `@workspace_usage_mem`: Toggles memory usage display (on or off).
-- `@workspace_usage_cpu`: Toggles CPU usage display (on or off).
+- `@workspace_usage_processes`: A string of process names separated by `|` that you want to monitor.
+- `@workspace_usage_mem`: Toggles memory usage display (`on` or `off`).
+- `@workspace_usage_cpu`: Toggles CPU usage display (`on` or `off`).
+- `@workspace_usage_interval_delay`: The amount of time (in seconds) to delay updates. If set to a value greater than `@status-interval`, the delay will be skipped.
 
-Example:
+### Example:
 ```bash
-# Set the processes to monitor (customize this as needed)
+# Set the processes to monitor, customize this as needed (default is 'tmux')
 set -g @workspace_usage_processes 'tmux|nvim|mason'
 
 # Enable memory and CPU usage display (default is 'on')
 set -g @workspace_usage_mem 'on'
 set -g @workspace_usage_cpu 'on'
-set -g @workspace_usage_refresh_interval 10  # refresh every 10 seconds
+
+# Set the interval delay in seconds, updates every 20 seconds if @status-interval is 15 (default is 0)
+set -g @workspace_usage_interval_delay 5
 
 # Add the plugin output to status-right
 set -g status-right '#{workspace_usage}'
