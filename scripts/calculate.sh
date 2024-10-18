@@ -9,23 +9,34 @@ main () {
   show_cpu=$(get_tmux_option '@workspace_usage_cpu' 'on')
   refresh_interval=$(get_tmux_option '@workspace_usage_refresh_interval' 1)
 
+  output="N/A"
+
   # Temporary file to store last update time
   last_update_file="/tmp/tmux-workspace-usage-last-update"
 
-  # Get the current time and the last update time
+  # Get the current time in seconds since the epoch
   current_time=$(date +%s)
-  if [ -f "$last_update_file" ]; then
-      last_update=$(cat "$last_update_file")
-  else
+
+  if [ ! -f "$last_update_file" ]; then
       last_update=0
+  else
+      last_update=$(cat "$last_update_file")
+      # If last_update is empty or not numeric, set it to 0
+      if [[ -z "$last_update" || ! "$last_update" =~ ^[0-9]+$ ]]; then
+          last_update=0
+      fi
   fi
 
   # Check if the refresh interval has passed
-  if [ $((current_time - last_update)) -lt $refresh_interval ]; then
-    # If the interval hasn't passed, use cached output and exit
-    cached_output=$(cat /tmp/tmux-workspace-usage-output)
-    echo "$cached_output"
-    exit 0
+  if ((current_time - last_update < refresh_interval)); then
+      # Check if the cached output file exists before reading it
+      if [ -f /tmp/tmux-workspace-usage-output ]; then
+          cached_output=$(cat /tmp/tmux-workspace-usage-output)
+          echo "$cached_output"
+      else
+          echo "$output"
+      fi
+      exit 0
   fi
 
   # Get the list of processes and filter for relevant ones
@@ -41,8 +52,6 @@ main () {
   if [ "$show_cpu" = "on" ]; then
     cpu_usage=$(echo "$process_list" | awk '{sum += $3} END {printf "%.2f%%", sum}')
   fi
-
-  output="N/A"
 
   if [ "$show_mem" = "on" ]; then
     output="$memory_usage"
