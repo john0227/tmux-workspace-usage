@@ -1,6 +1,6 @@
 # tmux-workspace-usage
 
-A tmux plugin that shows the memory and CPU usage of your workspace processes in the tmux status bar.
+A tmux plugin that displays the memory and CPU usage of your workspace processes in the tmux status bar.
 
 ## Features
 
@@ -39,3 +39,6 @@ set -g @workspace_usage_cpu 'on'
 # Add the plugin output to status-right
 set -g status-right '#{workspace_usage}'
 ```
+
+## License
+[MIT](https://github.com/sjdonado/tmux-workspace-usage/blob/master/LICENSE.md)
