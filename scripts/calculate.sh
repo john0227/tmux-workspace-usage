@@ -23,7 +23,7 @@ main () {
   local cpu_usage=""
 
   if [ "$show_mem" = "on" ]; then
-    memory_usage=$(echo "$process_list" | awk '{print $2, $6}' | sort -u -k1,1 | awk '{sum += $2} END {printf "%.2f MB", sum / 1024}')
+    memory_usage=$(echo "$process_list" | awk '{print $2, $6}' | sort -u -k1,1 | awk '{sum += $2} END {printf "%.2fMB", sum / 1024}')
   fi
 
   if [ "$show_cpu" = "on" ]; then
