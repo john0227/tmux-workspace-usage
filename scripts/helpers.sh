@@ -3,7 +3,7 @@
 get_tmux_option() {
   local option="$1"
   local default_value="$2"
-  tmux show-option -gqv "$option" || echo "$default_value"
+  tmux show-option -gv "$option" || echo "$default_value"
 }
 
 set_tmux_option() {
